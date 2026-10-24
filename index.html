@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f2942" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Tesorería IASD — Análisis e Informes a la Iglesia</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --iasd-navy: #0f2942;
+      --iasd-blue: #163e64;
+      --iasd-gold: #d97706;
+      --iasd-gold-light: #fbbf24;
+      --iasd-teal: #0d9488;
+      --iasd-teal-light: #14b8a6;
+      --bg-main: #f1f5f9;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(15, 41, 66, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      padding-bottom: 92px;
+      line-height: 1.5;
+    }
+
+    /* Top App Header */
+    .app-header {
+      background: linear-gradient(135deg, #0a1929 0%, #0f2942 55%, #163e64 100%);
+      color: #fff;
+      padding: 16px 16px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 20px rgba(10, 25, 41, 0.25);
+    }
+
+    .header-top {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-icon img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-acms {
+      font-size: 0.68rem;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #0f172a;
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .header-select, .header-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 7px 11px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .header-select option {
+      color: #0f172a;
+      background: #fff;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .header-btn.gold {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #0f172a;
+      border: none;
+      font-weight: 700;
+    }
+
+    /* Desktop navigation tabs inside header */
+    .desktop-tabs {
+      max-width: 1180px;
+      margin: 14px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.22);
+      padding: 5px;
+      border-radius: 12px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #fff;
+      color: var(--iasd-navy);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      font-weight: 700;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1180px;
+      margin: 18px auto;
+      padding: 0 14px;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards & Sections */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--iasd-navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .card-badge.gold {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .card-badge.teal {
+      background: #ccfbf1;
+      color: #0f766e;
+    }
+
+    /* Form Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .currency-prefix {
+      position: absolute;
+      left: 11px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      font-weight: 500;
+      color: var(--text-main);
+      background: #f8fafc;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .has-prefix input {
+      padding-left: 34px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--iasd-blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(22, 62, 100, 0.1);
+    }
+
+    /* 60/20/20 Split Preview Box */
+    .split-preview {
+      margin-top: 14px;
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .split-item {
+      background: #fff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border-left: 4px solid var(--iasd-blue);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .split-item.local { border-left-color: var(--iasd-teal); }
+    .split-item.campo { border-left-color: var(--iasd-gold); }
+    .split-item.mundial { border-left-color: #6366f1; }
+
+    .split-item span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .split-item strong {
+      font-size: 1.02rem;
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    /* Department Expenses Table / Cards */
+    .dept-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dept-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1.2fr auto;
+      gap: 8px;
+      align-items: center;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    @media (max-width: 640px) {
+      .dept-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .dept-row .dept-name-col {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .btn-icon-del {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-add {
+      background: #f1f5f9;
+      color: var(--iasd-navy);
+      border: 1.5px dashed #94a3b8;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+
+    .btn-add:hover {
+      background: #e2e8f0;
+      border-color: var(--iasd-navy);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--iasd-navy);
+    }
+
+    .kpi-card.teal::before { background: var(--iasd-teal); }
+    .kpi-card.gold::before { background: var(--iasd-gold); }
+    .kpi-card.danger::before { background: var(--danger); }
+    .kpi-card.success::before { background: var(--success); }
+
+    .kpi-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .kpi-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chart-box {
+      position: relative;
+      height: 290px;
+      width: 100%;
+    }
+
+    /* Smart Analysis Box */
+    .analysis-banner {
+      background: linear-gradient(135deg, #0f2942 0%, #163e64 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .analysis-banner h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--iasd-gold-light);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analysis-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .analysis-item {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 11px 13px;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    /* Traffic Light / Semáforo Table */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table.modern-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    table.modern-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--border);
+    }
+
+    table.modern-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    table.modern-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .status-ok { background: #dcfce7; color: #15803d; }
+    .status-warn { background: #fef3c7; color: #b45309; }
+    .status-over { background: #fee2e2; color: #b91c1c; }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    /* Official Printable / Presentation Report */
+    .report-sheet {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 28px;
+      max-width: 920px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(15, 41, 66, 0.08);
+    }
+
+    .report-header-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid var(--iasd-navy);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .report-church-info h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.35rem;
+      color: var(--iasd-navy);
+      font-weight: 800;
+    }
+
+    .report-church-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .report-verse {
+      background: #f8fafc;
+      border-left: 4px solid var(--iasd-gold);
+      padding: 10px 14px;
+      font-style: italic;
+      font-size: 0.84rem;
+      color: #334155;
+      margin-bottom: 20px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .report-two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .report-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fcfdff;
+    }
+
+    .report-box h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--iasd-navy);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .report-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.86rem;
+    }
+
+    .report-line.total {
+      border-top: 2px solid var(--iasd-navy);
+      margin-top: 6px;
+      padding-top: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--iasd-navy);
+    }
+
+    .signatures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 42px;
+      padding-top: 20px;
+      text-align: center;
+    }
+
+    .sig-line {
+      border-top: 1.5px solid #334155;
+      padding-top: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .sig-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    /* Action Bar for Report */
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .btn-action {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.15s;
+    }
+
+    .btn-action:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--iasd-navy);
+      color: #fff;
+    }
+
+    .btn-whatsapp {
+      background: #16a34a;
+      color: #fff;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #0f172a;
+    }
+
+    /* Bottom Mobile Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+      z-index: 60;
+      box-shadow: 0 -4px 20px rgba(15, 41, 66, 0.08);
+    }
+
+    .nav-item {
+      border: none;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 6px 4px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--iasd-navy);
+      background: #eff6ff;
+      font-weight: 800;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 1.15rem;
+    }
+
+    @media (max-width: 768px) {
+      .desktop-tabs { display: none; }
+      .bottom-nav { display: grid; }
+      .report-sheet { padding: 16px; }
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 100;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .app-header, .bottom-nav, .action-bar, #view-form, #view-dashboard {
+        display: none !important;
+      }
+      #view-report {
+        display: block !important;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .report-sheet {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-icon">
+          <img src="./icon.svg" alt="IASD" />
+        </div>
+        <div>
+          <div class="brand-title">
+            Tesorería IASD
+            <span class="badge-acms">60/20/20 • ACMS</span>
+          </div>
+          <div class="brand-subtitle" id="headerChurchLabel">Informe Financiero a la Hermandad</div>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <select id="currencySelect" class="header-select" title="Moneda" onchange="updateCurrency(this.value)">
+          <option value="$">$ (USD / Peso)</option>
+          <option value="S/">S/ (Soles)</option>
+          <option value="€">€ (Euros)</option>
+          <option value="Bs">Bs (Bolivianos)</option>
+          <option value="Q">Q (Quetzales)</option>
+          <option value="RD$">RD$ (Dom)</option>
+          <option value="L">L (Lempiras)</option>
+        </select>
+
+        <select id="periodHistorySelect" class="header-select" title="Períodos Guardados" onchange="loadPeriodById(this.value)">
+        </select>
+
+        <button class="header-btn gold" onclick="createNewPeriod()">+ Nuevo Período</button>
+        <button class="header-btn" onclick="exportBackupJSON()" title="Descargar copia de seguridad">💾 Respaldo</button>
+      </div>
+    </div>
+
+    <div class="desktop-tabs">
+      <button class="tab-btn active" id="tab-btn-form" onclick="switchView('form')">📝 1. Datos de Tesorería</button>
+      <button class="tab-btn" id="tab-btn-dashboard" onclick="switchView('dashboard')">📊 2. Gráficos y Análisis</button>
+      <button class="tab-btn" id="tab-btn-report" onclick="switchView('report')">🖨️ 3. Informe a los Hermanos</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ==========================================
+         VIEW 1: DATA ENTRY FORM
+         ========================================== -->
+    <section id="view-form" class="view-section active">
+
+      <!-- 1. Datos de la Iglesia y Mayordomía -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⛪ 1. Identificación de la Iglesia y Fidelidad</div>
+          <span class="card-badge">Datos Generales</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre de la Iglesia Local</label>
+            <input type="text" id="churchName" placeholder="Ej. Iglesia Adventista Central" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Asociación / Misión / Distrito</label>
+            <input type="text" id="conferenceName" placeholder="Ej. Asociación Metropolitana" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Período del Informe (Mes o Trimestre)</label>
+            <input type="text" id="periodName" placeholder="Ej. Octubre 2026 / 3er Trimestre" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Tesorero(a) de la Iglesia</label>
+            <input type="text" id="treasurerName" placeholder="Nombre del Tesorero(a)" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Pastor / Anciano Consejero</label>
+            <input type="text" id="pastorName" placeholder="Nombre del Pastor o Anciano" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Miembros Bautizados en Lista</label>
+            <input type="number" id="totalMembers" min="1" placeholder="120" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Hermanos Diezmantes Activos</label>
+            <input type="number" id="tithingMembers" min="0" placeholder="78" oninput="syncData()" />
+          </div>
+          <div class="form-group">
+            <label>Hermanos Ofrendantes / Pactantes</label>
+            <input type="number" id="offeringMembers" min="0" placeholder="92" oninput="syncData()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Diezmos y Plan de Ofrenda Combinada (60/20/20) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🙏 2. Diezmos y Ofrenda Combinada (ACMS)</div>
+          <span class="card-badge gold">Cálculo Automático 60/20/20</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Diezmos Recibidos (100% Asociación)</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="titheAmount" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Ofrenda Combinada Total Recibida</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="combinedOffering" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Ofrendas Proyectos Misioneros / ADRA / 13° Sáb (Asociación)</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="specialConferenceOffering" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Sobres / Recibos Procesados en ACMS</label>
+            <input type="number" id="envelopesCount" min="0" placeholder="185" oninput="syncData()" />
+          </div>
+        </div>
+
+        <!-- Desglose en vivo del 60/20/20 -->
+        <div class="split-preview">
+          <div class="split-item local">
+            <span>60% Presupuesto Iglesia Local (Queda en Iglesia)</span>
+            <strong id="preview60">$0.00</strong>
+          </div>
+          <div class="split-item campo">
+            <span>20% Desarrollo del Campo Local (Remesa)</span>
+            <strong id="preview20Campo">$0.00</strong>
+          </div>
+          <div class="split-item mundial">
+            <span>20% Fondo Misión Mundial (Remesa)</span>
+            <strong id="preview20Mundial">$0.00</strong>
+          </div>
+          <div class="split-item">
+            <span>Total Remesa Enviada a la Asociación</span>
+            <strong id="previewTotalRemesa">$0.00</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Fondos Locales de la Iglesia -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🏦 3. Ingresos Propios y Saldo Inicial de la Iglesia Local</div>
+          <span class="card-badge teal">100% Iglesia Local</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Saldo Inicial al Comenzar el Período (Caja + Banco)</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="openingBalance" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Ofrendas Directas al Presupuesto Local</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="directLocalOffering" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Fondo Pro-Templo / Construcción / Mejoras</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="buildingFundIncome" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Fondo Acción Solidaria (ASA / Dorcas / Beneficencia)</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="welfareFundIncome" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Otros Ingresos Locales / Actividades Departamentos</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="otherLocalIncome" oninput="syncData()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Ejecución del Presupuesto y Gastos por Departamento -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📉 4. Gastos Reales vs. Presupuesto por Departamento</div>
+          <span class="card-badge">Egresos Locales</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          Ingresa el <strong>Presupuesto Votado</strong> y el <strong>Gasto Real Ejecutado</strong> de cada rubro o departamento de la iglesia:
+        </p>
+
+        <div id="departmentsContainer" class="dept-list"></div>
+
+        <button type="button" class="btn-add" onclick="addDepartmentRow()">
+          + Agregar Departamento o Rubro de Gasto
+        </button>
+      </div>
+
+      <!-- 5. Arqueo de Caja, Bancos y Notas para la Asamblea -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🔐 5. Conciliación (Dónde está el Saldo Actual) y Notas</div>
+          <button type="button" class="header-btn" style="background:#0f2942; color:#fff;" onclick="autoBalanceBank()">
+            ⚡ Cuadrar Automáticamente en Banco
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Efectivo en Caja de Tesorería Local</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="cashInHand" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Saldo en Cuenta Bancaria de la Iglesia</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="cashInBank" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Fondos en Depósito / Custodia en Asociación</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">$</span>
+              <input type="number" step="0.01" id="fundsInConference" oninput="syncData()" />
+            </div>
+          </div>
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Observaciones o Proyectos Destacados para Informar a la Iglesia</label>
+            <textarea id="reportNotes" rows="2" placeholder="Ej. Se completó el mantenimiento del sistema de audio y la compra de materiales para Escuela Sabática infantil..." oninput="syncData()"></textarea>
+          </div>
+        </div>
+        <div id="reconciliationAlert" style="margin-top: 12px; font-size: 0.83rem; font-weight: 600;"></div>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <button class="btn-action btn-gold" onclick="switchView('dashboard')" style="font-size: 1rem; padding: 14px 28px;">
+          📊 Ver Gráficos Modernos y Análisis Financiero →
+        </button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: INTERACTIVE DASHBOARD & CHARTS
+         ========================================== -->
+    <section id="view-dashboard" class="view-section">
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Saldo Inicial Local</div>
+          <div class="kpi-value" id="kpiOpening">$0.00</div>
+          <div class="kpi-sub">Disponible al inicio del período</div>
+        </div>
+        <div class="kpi-card teal">
+          <div class="kpi-label">Ingresos Locales del Período</div>
+          <div class="kpi-value" id="kpiLocalIncome">$0.00</div>
+          <div class="kpi-sub" id="kpiLocalIncomeSub">Incluye 60% Ofrenda Combinada</div>
+        </div>
+        <div class="kpi-card danger">
+          <div class="kpi-label">Egresos / Gastos Locales</div>
+          <div class="kpi-value" id="kpiLocalExpenses">$0.00</div>
+          <div class="kpi-sub" id="kpiBudgetPctSub">0% del presupuesto ejecutado</div>
+        </div>
+        <div class="kpi-card success">
+          <div class="kpi-label">Saldo Final en Caja y Bancos</div>
+          <div class="kpi-value" id="kpiClosingBalance">$0.00</div>
+          <div class="kpi-sub" id="kpiNetResultSub">Balance operativo del período</div>
+        </div>
+        <div class="kpi-card gold">
+          <div class="kpi-label">Remesa Total a Asociación</div>
+          <div class="kpi-value" id="kpiRemittance">$0.00</div>
+          <div class="kpi-sub">Diezmos + 40% Mundial/Campo + Esp.</div>
+        </div>
+      </div>
+
+      <!-- Intelligent Executive Analysis -->
+      <div class="analysis-banner">
+        <h3>✨ Diagnóstico Inteligente para la Hermandad y Junta</h3>
+        <div class="analysis-points" id="smartInsightsContainer"></div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🍩 Destino General de Dádivas Recibidas</div>
+            <span class="card-badge gold">Transparencia Total</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartDistribution"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📊 Flujo Financiero de la Iglesia Local</div>
+            <span class="card-badge teal">Fondos Locales</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartCashflow"></canvas>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-header">
+            <div class="card-title">📈 Ejecución por Departamento (Presupuesto Votado vs. Gasto Real)</div>
+            <span class="card-badge">Control de Presupuesto</span>
+          </div>
+          <div class="chart-box" style="height: 330px;">
+            <canvas id="chartDepartments"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🙌 Indicadores de Fidelidad y Mayordomía</div>
+            <span class="card-badge">% Participación</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartStewardship"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🚦 Semáforo de Presupuesto por Departamento</div>
+            <span class="card-badge">Estado Actual</span>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Departamento / Rubro</th>
+                  <th>Presupuesto</th>
+                  <th>Gasto Real</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="semaforoTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 18px 0;">
+        <button class="btn-action btn-primary" onclick="switchView('report')">
+          🖨️ Generar Hoja de Informe para los Hermanos →
+        </button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: OFFICIAL REPORT FOR CHURCH MEMBERS
+         ========================================== -->
+    <section id="view-report" class="view-section">
+      <div class="action-bar">
+        <button class="btn-action btn-primary" onclick="window.print()">
+          🖨️ Imprimir / Guardar en PDF
+        </button>
+        <button class="btn-action btn-whatsapp" onclick="shareViaWhatsApp()">
+          📲 Compartir Resumen por WhatsApp
+        </button>
+        <button class="btn-action btn-gold" onclick="copyReportSummary()">
+          📋 Copiar Informe para Junta
+        </button>
+      </div>
+
+      <div class="report-sheet" id="printableReport">
+        <div class="report-header-banner">
+          <div class="report-church-info">
+            <h2 id="repChurchName">Iglesia Adventista del Séptimo Día</h2>
+            <p id="repConferenceName">Asociación / Misión</p>
+            <p style="margin-top: 4px; font-weight: 700; color: var(--iasd-gold);" id="repPeriodTitle">INFORME DE TESORERÍA A LA FELIGRESÍA</p>
+          </div>
+          <div style="text-align: right; font-size: 0.82rem; color: var(--text-muted);">
+            <div><strong>Sistema:</strong> Estándar ACMS (60/20/20)</div>
+            <div id="repDateGenerated">Fecha: --/--/----</div>
+            <div id="repEnvelopesInfo">Sobres procesados: 0</div>
+          </div>
+        </div>
+
+        <div class="report-verse">
+          "Traed todos los diezmos al alfolí y haya alimento en mi casa; y probadme ahora en esto, dice Jehová de los ejércitos, si no os abriré las ventanas de los cielos, y derramaré sobre vosotros bendición hasta que sobreabunde." — <strong>Malaquías 3:10</strong>
+        </div>
+
+        <!-- Bloque 1: Remesas a la Asociación y Bloque 2: Resumen Local -->
+        <div class="report-two-col">
+          <div class="report-box">
+            <h4>1. Fondos Remesados a la Asociación / Misión</h4>
+            <div class="report-line">
+              <span>Diezmos Sagrados (100% Asociación)</span>
+              <strong id="repTithe">$0.00</strong>
+            </div>
+            <div class="report-line">
+              <span>20% Desarrollo del Campo Local</span>
+              <strong id="rep20Campo">$0.00</strong>
+            </div>
+            <div class="report-line">
+              <span>20% Fondo Misión Mundial</span>
+              <strong id="rep20Mundial">$0.00</strong>
+            </div>
+            <div class="report-line">
+              <span>Ofrendas Proyectos Especiales / ADRA</span>
+              <strong id="repSpecialConf">$0.00</strong>
+            </div>
+            <div class="report-line total">
+              <span>TOTAL ENVIADO A ASOCIACIÓN</span>
+              <span id="repTotalRemesa">$0.00</span>
+            </div>
+          </div>
+
+          <div class="report-box">
+            <h4>2. Movimiento de Fondos de la Iglesia Local</h4>
+            <div class="report-line">
+              <span>Saldo Inicial del Período</span>
+              <strong id="repOpening">$0.00</strong>
+            </div>
+            <div class="report-line">
+              <span>(+) 60% Ofrenda Combinada (Presupuesto Local)</span>
+              <strong id="rep60Local">$0.00</strong>
+            </div>
+            <div class="report-line">
+              <span>(+) Ofrendas Directas y Fondos Específicos Locales</span>
+              <strong id="repOtherLocal">$0.00</strong>
+            </div>
+            <div class="report-line" style="color: #b91c1c;">
+              <span>(-) Total Gastos y Ejecución Departamental</span>
+              <strong id="repExpenses">-$0.00</strong>
+            </div>
+            <div class="report-line total" style="color: #0f766e;">
+              <span>(=) SALDO ACTUAL DISPONIBLE</span>
+              <span id="repClosing">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desglose de Ingresos Locales y Arqueo de Caja/Banco -->
+        <div class="report-two-col">
+          <div class="report-box">
+            <h4>3. Detalle de Fondos Propios Recibidos</h4>
+            <div class="report-line">
+              <span>60% Plan de Dádivas Combinadas</span>
+              <span id="repDetail60">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Ofrenda Directa Presupuesto Local</span>
+              <span id="repDetailDirect">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Fondo Pro-Templo / Construcción</span>
+              <span id="repDetailBuilding">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Acción Solidaria Adventista (ASA / Dorcas)</span>
+              <span id="repDetailWelfare">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Otros Ingresos / Actividades Locales</span>
+              <span id="repDetailOther">$0.00</span>
+            </div>
+            <div class="report-line total">
+              <span>TOTAL INGRESOS LOCALES</span>
+              <span id="repDetailTotalLocal">$0.00</span>
+            </div>
+          </div>
+
+          <div class="report-box">
+            <h4>4. Arqueo y Ubicación del Saldo Actual</h4>
+            <div class="report-line">
+              <span>Efectivo en Caja de Tesorería</span>
+              <span id="repCashHand">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Saldo en Cuenta Bancaria de la Iglesia</span>
+              <span id="repCashBank">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Fondos en Custodia en la Asociación</span>
+              <span id="repCashConf">$0.00</span>
+            </div>
+            <div class="report-line">
+              <span>Participación en Diezmos / Ofrendas</span>
+              <span id="repFidelitySummary">0% / 0%</span>
+            </div>
+            <div class="report-line total">
+              <span>TOTAL RESPALDADO EN CAJA Y BANCOS</span>
+              <span id="repTotalBacked">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla de Gastos por Departamento -->
+        <div class="report-box" style="margin-bottom: 18px;">
+          <h4>5. Desglose de Gastos e Inversión por Departamento de la Iglesia</h4>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Departamento / Rubro</th>
+                  <th>Presupuesto Votado</th>
+                  <th>Gasto Ejecutado</th>
+                  <th>Saldo / Diferencia</th>
+                  <th>% Uso</th>
+                </tr>
+              </thead>
+              <tbody id="repDeptTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Notas de Tesorería -->
+        <div class="report-box" id="repNotesBox">
+          <h4>6. Notas e Información Relevante para la Iglesia</h4>
+          <p id="repNotesText" style="font-size: 0.86rem; color: #334155;"></p>
+        </div>
+
+        <!-- Firmas -->
+        <div class="signatures-grid">
+          <div>
+            <div class="sig-line" id="repSigTreasurer">Tesorero(a)</div>
+            <div class="sig-sub">Tesorero(a) de la Iglesia Local</div>
+          </div>
+          <div>
+            <div class="sig-line" id="repSigPastor">Pastor / Anciano</div>
+            <div class="sig-sub">Pastor Distrital / Director de Junta</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="mob-nav-form" onclick="switchView('form')">
+      <span class="nav-icon">📝</span>
+      <span>1. Datos</span>
+    </button>
+    <button class="nav-item" id="mob-nav-dashboard" onclick="switchView('dashboard')">
+      <span class="nav-icon">📊</span>
+      <span>2. Gráficos</span>
+    </button>
+    <button class="nav-item" id="mob-nav-report" onclick="switchView('report')">
+      <span class="nav-icon">🖨️</span>
+      <span>3. Informe</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast">Mensaje</div>
+
+  <script>
+    const STORAGE_KEY = 'iasd_tesoreria_periods_v1';
+    const CURRENCY_KEY = 'iasd_tesoreria_currency_v1';
+
+    let currencySymbol = localStorage.getItem(CURRENCY_KEY) || '$';
+    let periods = [];
+    let currentPeriodId = null;
+
+    // Chart instances
+    let chartDist = null;
+    let chartFlow = null;
+    let chartDept = null;
+    let chartStew = null;
+
+    // Default sample period so the user sees modern charts immediately
+    function getSamplePeriods() {
+      return [
+        {
+          id: 'periodo-oct-2026',
+          churchName: 'Iglesia Adventista Central',
+          conferenceName: 'Asociación Local IASD',
+          periodName: 'Octubre 2026',
+          treasurerName: 'Hno. Tesorero General',
+          pastorName: 'Pr. Distrital IASD',
+          totalMembers: 140,
+          tithingMembers: 92,
+          offeringMembers: 112,
+          titheAmount: 4850.00,
+          combinedOffering: 2200.00,
+          specialConferenceOffering: 340.00,
+          envelopesCount: 215,
+          openingBalance: 1850.00,
+          directLocalOffering: 280.00,
+          buildingFundIncome: 650.00,
+          welfareFundIncome: 190.00,
+          otherLocalIncome: 120.00,
+          cashInHand: 310.00,
+          cashInBank: 1680.00,
+          fundsInConference: 450.00,
+          reportNotes: 'Durante este período se realizó el mantenimiento preventivo del sistema de sonido, compra de trimestrales de Escuela Sabática para visitas y avance del fondo Pro-Templo.',
+          departments: [
+            { name: 'Servicios Fijos (Luz, Agua, Internet)', budget: 380, spent: 355 },
+            { name: 'Mantenimiento y Limpieza del Templo (Diaconado)', budget: 300, spent: 290 },
+            { name: 'Escuela Sabática y Ministerio Personal', budget: 220, spent: 210 },
+            { name: 'Ministerio Joven (JA, Conquistadores, Aventureros)', budget: 280, spent: 310 },
+            { name: 'Ministerio Infantil y del Adolescente', budget: 160, spent: 145 },
+            { name: 'Evangelismo, Audio y Comunicaciones', budget: 250, spent: 230 },
+            { name: 'Acción Solidaria Adventista (ASA / Dorcas)', budget: 190, spent: 180 },
+            { name: 'Inversión Pro-Templo / Infraestructura', budget: 500, spent: 250 }
+          ]
+        }
+      ];
+    }
+
+    function initApp() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          periods = JSON.parse(saved);
+        } catch (e) {
+          periods = getSamplePeriods();
+        }
+      } else {
+        periods = getSamplePeriods();
+      }
+      if (!periods.length) periods = getSamplePeriods();
+
+      document.getElementById('currencySelect').value = currencySymbol;
+      updateCurrencyPrefixes();
+
+      currentPeriodId = periods[0].id;
+      renderPeriodSelect();
+      populateFormFromCurrent();
+      calculateAndRenderAll();
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+    }
+
+    function renderPeriodSelect() {
+      const sel = document.getElementById('periodHistorySelect');
+      sel.innerHTML = '';
+      periods.forEach((p) => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `📅 ${p.periodName || 'Sin nombre'}`;
+        if (p.id === currentPeriodId) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    function getCurrentPeriod() {
+      return periods.find((p) => p.id === currentPeriodId) || periods[0];
+    }
+
+    function loadPeriodById(id) {
+      currentPeriodId = id;
+      populateFormFromCurrent();
+      calculateAndRenderAll();
+      showToast('Período cargado');
+    }
+
+    function createNewPeriod() {
+      const base = getCurrentPeriod();
+      const prevCalc = computeFinancials(base);
+      const newName = prompt('Nombre del nuevo período (ej. Noviembre 2026 o 4to Trimestre 2026):', 'Noviembre 2026');
+      if (!newName) return;
+
+      const newPeriod = {
+        id: 'periodo-' + Date.now(),
+        churchName: base.churchName,
+        conferenceName: base.conferenceName,
+        periodName: newName,
+        treasurerName: base.treasurerName,
+        pastorName: base.pastorName,
+        totalMembers: base.totalMembers,
+        tithingMembers: base.tithingMembers,
+        offeringMembers: base.offeringMembers,
+        titheAmount: 0,
+        combinedOffering: 0,
+        specialConferenceOffering: 0,
+        envelopesCount: 0,
+        openingBalance: Number(prevCalc.closingBalance.toFixed(2)),
+        directLocalOffering: 0,
+        buildingFundIncome: 0,
+        welfareFundIncome: 0,
+        otherLocalIncome: 0,
+        cashInHand: 0,
+        cashInBank: Number(prevCalc.closingBalance.toFixed(2)),
+        fundsInConference: 0,
+        reportNotes: '',
+        departments: base.departments.map(d => ({ name: d.name, budget: d.budget, spent: 0 }))
+      };
+
+      periods.unshift(newPeriod);
+      currentPeriodId = newPeriod.id;
+      saveToStorage();
+      renderPeriodSelect();
+      populateFormFromCurrent();
+      calculateAndRenderAll();
+      switchView('form');
+      showToast(`Creado "${newName}" con el saldo final anterior`);
+    }
+
+    function populateFormFromCurrent() {
+      const p = getCurrentPeriod();
+      document.getElementById('churchName').value = p.churchName || '';
+      document.getElementById('conferenceName').value = p.conferenceName || '';
+      document.getElementById('periodName').value = p.periodName || '';
+      document.getElementById('treasurerName').value = p.treasurerName || '';
+      document.getElementById('pastorName').value = p.pastorName || '';
+      document.getElementById('totalMembers').value = p.totalMembers ?? 0;
+      document.getElementById('tithingMembers').value = p.tithingMembers ?? 0;
+      document.getElementById('offeringMembers').value = p.offeringMembers ?? 0;
+
+      document.getElementById('titheAmount').value = p.titheAmount ?? 0;
+      document.getElementById('combinedOffering').value = p.combinedOffering ?? 0;
+      document.getElementById('specialConferenceOffering').value = p.specialConferenceOffering ?? 0;
+      document.getElementById('envelopesCount').value = p.envelopesCount ?? 0;
+
+      document.getElementById('openingBalance').value = p.openingBalance ?? 0;
+      document.getElementById('directLocalOffering').value = p.directLocalOffering ?? 0;
+      document.getElementById('buildingFundIncome').value = p.buildingFundIncome ?? 0;
+      document.getElementById('welfareFundIncome').value = p.welfareFundIncome ?? 0;
+      document.getElementById('otherLocalIncome').value = p.otherLocalIncome ?? 0;
+
+      document.getElementById('cashInHand').value = p.cashInHand ?? 0;
+      document.getElementById('cashInBank').value = p.cashInBank ?? 0;
+      document.getElementById('fundsInConference').value = p.fundsInConference ?? 0;
+      document.getElementById('reportNotes').value = p.reportNotes || '';
+
+      renderDepartmentInputs(p.departments || []);
+    }
+
+    function renderDepartmentInputs(depts) {
+      const container = document.getElementById('departmentsContainer');
+      container.innerHTML = '';
+      depts.forEach((dept, idx) => {
+        const row = document.createElement('div');
+        row.className = 'dept-row';
+        row.innerHTML = `
+          <div class="form-group dept-name-col">
+            <label>Departamento / Categoría</label>
+            <input type="text" value="${escapeHtml(dept.name)}" oninput="updateDept(${idx}, 'name', this.value)" />
+          </div>
+          <div class="form-group">
+            <label>Presupuesto Votado</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">${currencySymbol}</span>
+              <input type="number" step="0.01" value="${dept.budget}" oninput="updateDept(${idx}, 'budget', this.value)" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Gasto Real Ejecutado</label>
+            <div class="input-wrap has-prefix">
+              <span class="currency-prefix">${currencySymbol}</span>
+              <input type="number" step="0.01" value="${dept.spent}" oninput="updateDept(${idx}, 'spent', this.value)" />
+            </div>
+          </div>
+          <button type="button" class="btn-icon-del" title="Eliminar rubro" onclick="removeDepartmentRow(${idx})">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function updateDept(idx, field, val) {
+      const p = getCurrentPeriod();
+      if (!p.departments[idx]) return;
+      if (field === 'name') {
+        p.departments[idx].name = val;
+      } else {
+        p.departments[idx][field] = parseFloat(val) || 0;
+      }
+      saveToStorage();
+      calculateAndRenderAll();
+    }
+
+    function addDepartmentRow() {
+      const p = getCurrentPeriod();
+      p.departments.push({ name: 'Nuevo Departamento / Proyecto', budget: 100, spent: 0 });
+      saveToStorage();
+      renderDepartmentInputs(p.departments);
+      calculateAndRenderAll();
+    }
+
+    function removeDepartmentRow(idx) {
+      const p = getCurrentPeriod();
+      if (p.departments.length <= 1) {
+        showToast('Debe existir al menos un rubro de gasto');
+        return;
+      }
+      p.departments.splice(idx, 1);
+      saveToStorage();
+      renderDepartmentInputs(p.departments);
+      calculateAndRenderAll();
+    }
+
+    function syncData() {
+      const p = getCurrentPeriod();
+      p.churchName = document.getElementById('churchName').value;
+      p.conferenceName = document.getElementById('conferenceName').value;
+      p.periodName = document.getElementById('periodName').value;
+      p.treasurerName = document.getElementById('treasurerName').value;
+      p.pastorName = document.getElementById('pastorName').value;
+      p.totalMembers = parseInt(document.getElementById('totalMembers').value) || 0;
+      p.tithingMembers = parseInt(document.getElementById('tithingMembers').value) || 0;
+      p.offeringMembers = parseInt(document.getElementById('offeringMembers').value) || 0;
+
+      p.titheAmount = parseFloat(document.getElementById('titheAmount').value) || 0;
+      p.combinedOffering = parseFloat(document.getElementById('combinedOffering').value) || 0;
+      p.specialConferenceOffering = parseFloat(document.getElementById('specialConferenceOffering').value) || 0;
+      p.envelopesCount = parseInt(document.getElementById('envelopesCount').value) || 0;
+
+      p.openingBalance = parseFloat(document.getElementById('openingBalance').value) || 0;
+      p.directLocalOffering = parseFloat(document.getElementById('directLocalOffering').value) || 0;
+      p.buildingFundIncome = parseFloat(document.getElementById('buildingFundIncome').value) || 0;
+      p.welfareFundIncome = parseFloat(document.getElementById('welfareFundIncome').value) || 0;
+      p.otherLocalIncome = parseFloat(document.getElementById('otherLocalIncome').value) || 0;
+
+      p.cashInHand = parseFloat(document.getElementById('cashInHand').value) || 0;
+      p.cashInBank = parseFloat(document.getElementById('cashInBank').value) || 0;
+      p.fundsInConference = parseFloat(document.getElementById('fundsInConference').value) || 0;
+      p.reportNotes = document.getElementById('reportNotes').value;
+
+      saveToStorage();
+      renderPeriodSelect();
+      calculateAndRenderAll();
+    }
+
+    function computeFinancials(p) {
+      const tithe = Number(p.titheAmount) || 0;
+      const combined = Number(p.combinedOffering) || 0;
+      const specialConf = Number(p.specialConferenceOffering) || 0;
+
+      // 60 / 20 / 20 Plan
+      const local60 = combined * 0.60;
+      const campo20 = combined * 0.20;
+      const mundial20 = combined * 0.20;
+
+      const totalRemittance = tithe + campo20 + mundial20 + specialConf;
+
+      const opening = Number(p.openingBalance) || 0;
+      const directLocal = Number(p.directLocalOffering) || 0;
+      const building = Number(p.buildingFundIncome) || 0;
+      const welfare = Number(p.welfareFundIncome) || 0;
+      const otherLocal = Number(p.otherLocalIncome) || 0;
+
+      const otherLocalCombined = directLocal + building + welfare + otherLocal;
+      const totalLocalIncome = local60 + otherLocalCombined;
+
+      const totalBudget = (p.departments || []).reduce((acc, d) => acc + (Number(d.budget) || 0), 0);
+      const totalExpenses = (p.departments || []).reduce((acc, d) => acc + (Number(d.spent) || 0), 0);
+
+      const netPeriodResult = totalLocalIncome - totalExpenses;
+      const closingBalance = opening + netPeriodResult;
+
+      const cashHand = Number(p.cashInHand) || 0;
+      const cashBank = Number(p.cashInBank) || 0;
+      const cashConf = Number(p.fundsInConference) || 0;
+      const totalBacked = cashHand + cashBank + cashConf;
+      const diffReconciliation = closingBalance - totalBacked;
+
+      const members = Math.max(Number(p.totalMembers) || 1, 1);
+      const tithePct = Math.min(100, Math.round(((Number(p.tithingMembers) || 0) / members) * 100));
+      const offeringPct = Math.min(100, Math.round(((Number(p.offeringMembers) || 0) / members) * 100));
+
+      return {
+        tithe,
+        combined,
+        specialConf,
+        local60,
+        campo20,
+        mundial20,
+        totalRemittance,
+        opening,
+        directLocal,
+        building,
+        welfare,
+        otherLocal,
+        otherLocalCombined,
+        totalLocalIncome,
+        totalBudget,
+        totalExpenses,
+        netPeriodResult,
+        closingBalance,
+        cashHand,
+        cashBank,
+        cashConf,
+        totalBacked,
+        diffReconciliation,
+        tithePct,
+        offeringPct
+      };
+    }
+
+    function autoBalanceBank() {
+      const p = getCurrentPeriod();
+      const f = computeFinancials(p);
+      const remainingForBank = Math.max(0, f.closingBalance - f.cashHand - f.cashConf);
+      p.cashInBank = Number(remainingForBank.toFixed(2));
+      document.getElementById('cashInBank').value = p.cashInBank;
+      saveToStorage();
+      calculateAndRenderAll();
+      showToast('Saldo cuadrado automáticamente en Banco');
+    }
+
+    function fmt(amount) {
+      const num = Number(amount) || 0;
+      return `${currencySymbol}${num.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function calculateAndRenderAll() {
+      const p = getCurrentPeriod();
+      const f = computeFinancials(p);
+
+      document.getElementById('headerChurchLabel').textContent =
+        `${p.churchName || 'Iglesia Local'} • ${p.periodName || 'Período Actual'}`;
+
+      // 1. Live preview in Form
+      document.getElementById('preview60').textContent = fmt(f.local60);
+      document.getElementById('preview20Campo').textContent = fmt(f.campo20);
+      document.getElementById('preview20Mundial').textContent = fmt(f.mundial20);
+      document.getElementById('previewTotalRemesa').textContent = fmt(f.totalRemittance);
+
+      const recAlert = document.getElementById('reconciliationAlert');
+      if (Math.abs(f.diffReconciliation) < 0.02) {
+        recAlert.style.color = '#15803d';
+        recAlert.innerHTML = `✅ Conciliación exacta: El saldo contable (${fmt(f.closingBalance)}) coincide al 100% con Caja + Banco + Asociación.`;
+      } else {
+        recAlert.style.color = '#b45309';
+        recAlert.innerHTML = `⚠️ Nota contable: El Saldo Final calculado es <strong>${fmt(f.closingBalance)}</strong> y la suma en Caja/Banco es <strong>${fmt(f.totalBacked)}</strong> (Diferencia: ${fmt(f.diffReconciliation)}). Pulsa "Cuadrar Automáticamente en Banco" para igualarlo.`;
+      }
+
+      // 2. Dashboard KPIs
+      document.getElementById('kpiOpening').textContent = fmt(f.opening);
+      document.getElementById('kpiLocalIncome').textContent = fmt(f.totalLocalIncome);
+      document.getElementById('kpiLocalIncomeSub').textContent = `60% Comb: ${fmt(f.local60)} + Esp: ${fmt(f.otherLocalCombined)}`;
+      document.getElementById('kpiLocalExpenses').textContent = fmt(f.totalExpenses);
+
+      const budgetExecPct = f.totalBudget > 0 ? Math.round((f.totalExpenses / f.totalBudget) * 100) : 0;
+      document.getElementById('kpiBudgetPctSub').textContent = `${budgetExecPct}% del presupuesto votado (${fmt(f.totalBudget)})`;
+
+      document.getElementById('kpiClosingBalance').textContent = fmt(f.closingBalance);
+      const netSign = f.netPeriodResult >= 0 ? '+' : '';
+      document.getElementById('kpiNetResultSub').textContent =
+        `Resultado del período: ${netSign}${fmt(f.netPeriodResult)}`;
+
+      document.getElementById('kpiRemittance').textContent = fmt(f.totalRemittance);
+
+      // 3. Smart Executive Analysis
+      renderSmartInsights(p, f, budgetExecPct);
+
+      // 4. Semáforo Table
+      renderSemaforoTable(p.departments || [], f);
+
+      // 5. Render Official Report Sheet
+      renderReportSheet(p, f);
+
+      // 6. Update Charts
+      updateCharts(p, f);
+    }
+
+    function renderSmartInsights(p, f, budgetExecPct) {
+      const container = document.getElementById('smartInsightsContainer');
+      const insights = [];
+
+      if (f.netPeriodResult >= 0) {
+        insights.push(`✅ <strong>Salud Operativa Positiva:</strong> Los ingresos de la iglesia local superaron a los gastos en <strong>${fmt(f.netPeriodResult)}</strong>, fortaleciendo el fondo disponible.`);
+      } else {
+        insights.push(`⚠️ <strong>Déficit en el Período:</strong> Los gastos superaron los ingresos del mes en <strong>${fmt(Math.abs(f.netPeriodResult))}</strong>, cubiertos con el saldo inicial acumulado.`);
+      }
+
+      const sortedDepts = [...(p.departments || [])].sort((a, b) => (b.spent || 0) - (a.spent || 0));
+      if (sortedDepts.length && sortedDepts[0].spent > 0) {
+        const top = sortedDepts[0];
+        const share = f.totalExpenses > 0 ? Math.round((top.spent / f.totalExpenses) * 100) : 0;
+        insights.push(`📌 <strong>Mayor Rubro de Inversión:</strong> "${escapeHtml(top.name)}" representó el <strong>${share}%</strong> del gasto local (${fmt(top.spent)}).`);
+      }
+
+      insights.push(`🙏 <strong>Fidelidad y Mayordomía:</strong> De ${p.totalMembers} miembros registrados, el <strong>${f.tithePct}%</strong> devolvió diezmos y el <strong>${f.offeringPct}%</strong> participó con ofrendas sistemáticas.`);
+
+      const overBudgetDepts = (p.departments || []).filter(d => d.budget > 0 && d.spent > d.budget);
+      if (overBudgetDepts.length === 0) {
+        insights.push(`🎯 <strong>Disciplina Presupuestaria:</strong> Todos los departamentos se mantuvieron dentro del presupuesto votado (${budgetExecPct}% de uso global).`);
+      } else {
+        insights.push(`🔎 <strong>Control de Junta:</strong> ${overBudgetDepts.length} departamento(s) superaron su presupuesto asignado y requieren voto de ajuste en Junta Directiva.`);
+      }
+
+      container.innerHTML = insights.map(item => `<div class="analysis-item">${item}</div>`).join('');
+    }
+
+    function renderSemaforoTable(depts, f) {
+      const tbody = document.getElementById('semaforoTableBody');
+      tbody.innerHTML = '';
+      depts.forEach(d => {
+        const budget = Number(d.budget) || 0;
+        const spent = Number(d.spent) || 0;
+        const pct = budget > 0 ? Math.round((spent / budget) * 100) : (spent > 0 ? 100 : 0);
+
+        let badgeClass = 'status-ok';
+        let badgeText = 'En rango';
+        let barColor = '#10b981';
+
+        if (pct > 100) {
+          badgeClass = 'status-over';
+          badgeText = `Excedido (${pct}%)`;
+          barColor = '#ef4444';
+        } else if (pct >= 85) {
+          badgeClass = 'status-warn';
+          badgeText = `Cerca del límite (${pct}%)`;
+          barColor = '#f59e0b';
+        } else {
+          badgeText = `Óptimo (${pct}%)`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight: 600;">${escapeHtml(d.name)}</div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width:${Math.min(100, pct)}%; background:${barColor};"></div>
+            </div>
+          </td>
+          <td>${fmt(budget)}</td>
+          <td style="font-weight: 700;">${fmt(spent)}</td>
+          <td><span class="status-pill ${badgeClass}">${badgeText}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderReportSheet(p, f) {
+      document.getElementById('repChurchName').textContent = p.churchName || 'Iglesia Adventista del Séptimo Día';
+      document.getElementById('repConferenceName').textContent = p.conferenceName || 'Asociación / Misión Local';
+      document.getElementById('repPeriodTitle').textContent = `INFORME FINANCIERO A LA IGLESIA — ${(p.periodName || '').toUpperCase()}`;
+      document.getElementById('repDateGenerated').textContent = `Fecha de emisión: ${new Date().toLocaleDateString('es-ES')}`;
+      document.getElementById('repEnvelopesInfo').textContent = `Recibos/Sobres ACMS: ${p.envelopesCount || 0}`;
+
+      document.getElementById('repTithe').textContent = fmt(f.tithe);
+      document.getElementById('rep20Campo').textContent = fmt(f.campo20);
+      document.getElementById('rep20Mundial').textContent = fmt(f.mundial20);
+      document.getElementById('repSpecialConf').textContent = fmt(f.specialConf);
+      document.getElementById('repTotalRemesa').textContent = fmt(f.totalRemittance);
+
+      document.getElementById('repOpening').textContent = fmt(f.opening);
+      document.getElementById('rep60Local').textContent = fmt(f.local60);
+      document.getElementById('repOtherLocal').textContent = fmt(f.otherLocalCombined);
+      document.getElementById('repExpenses').textContent = `-${fmt(f.totalExpenses)}`;
+      document.getElementById('repClosing').textContent = fmt(f.closingBalance);
+
+      document.getElementById('repDetail60').textContent = fmt(f.local60);
+      document.getElementById('repDetailDirect').textContent = fmt(f.directLocal);
+      document.getElementById('repDetailBuilding').textContent = fmt(f.building);
+      document.getElementById('repDetailWelfare').textContent = fmt(f.welfare);
+      document.getElementById('repDetailOther').textContent = fmt(f.otherLocal);
+      document.getElementById('repDetailTotalLocal').textContent = fmt(f.totalLocalIncome);
+
+      document.getElementById('repCashHand').textContent = fmt(f.cashHand);
+      document.getElementById('repCashBank').textContent = fmt(f.cashBank);
+      document.getElementById('repCashConf').textContent = fmt(f.cashConf);
+      document.getElementById('repFidelitySummary').textContent =
+        `${f.tithePct}% Diezmantes / ${f.offeringPct}% Ofrendantes`;
+      document.getElementById('repTotalBacked').textContent = fmt(f.totalBacked);
+
+      const repTbody = document.getElementById('repDeptTableBody');
+      repTbody.innerHTML = '';
+      (p.departments || []).forEach(d => {
+        const b = Number(d.budget) || 0;
+        const s = Number(d.spent) || 0;
+        const diff = b - s;
+        const pct = b > 0 ? Math.round((s / b) * 100) : 0;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:600;">${escapeHtml(d.name)}</td>
+          <td>${fmt(b)}</td>
+          <td>${fmt(s)}</td>
+          <td style="color:${diff >= 0 ? '#15803d' : '#b91c1c'}; font-weight:700;">
+            ${diff >= 0 ? '+' : ''}${fmt(diff)}
+          </td>
+          <td>${pct}%</td>
+        `;
+        repTbody.appendChild(tr);
+      });
+
+      const totalTr = document.createElement('tr');
+      const totalDiff = f.totalBudget - f.totalExpenses;
+      totalTr.style.background = '#f8fafc';
+      totalTr.style.fontWeight = '800';
+      totalTr.innerHTML = `
+        <td>TOTALES PRESUPUESTO LOCAL</td>
+        <td>${fmt(f.totalBudget)}</td>
+        <td>${fmt(f.totalExpenses)}</td>
+        <td style="color:${totalDiff >= 0 ? '#15803d' : '#b91c1c'};">${totalDiff >= 0 ? '+' : ''}${fmt(totalDiff)}</td>
+        <td>${f.totalBudget > 0 ? Math.round((f.totalExpenses / f.totalBudget) * 100) : 0}%</td>
+      `;
+      repTbody.appendChild(totalTr);
+
+      document.getElementById('repNotesText').textContent =
+        p.reportNotes || 'Los fondos fueron conciliados con los registros oficiales de ACMS y respaldados por sus respectivos comprobantes aprobados en Junta Directiva.';
+      document.getElementById('repSigTreasurer').textContent = p.treasurerName || 'Tesorero(a)';
+      document.getElementById('repSigPastor').textContent = p.pastorName || 'Pastor / Director de Junta';
+    }
+
+    function updateCharts(p, f) {
+      if (typeof Chart === 'undefined') return;
+
+      // 1. Distribution Doughnut Chart
+      const ctxDist = document.getElementById('chartDistribution').getContext('2d');
+      if (chartDist) chartDist.destroy();
+      chartDist = new Chart(ctxDist, {
+        type: 'doughnut',
+        data: {
+          labels: [
+            'Diezmos (100% Asociación)',
+            '60% Ofrenda Comb. (Iglesia Local)',
+            'Fondos Específicos Locales (Templo/ASA)',
+            '20% Campo Local (Asociación)',
+            '20% Misión Mundial + Proyectos'
+          ],
+          datasets: [{
+            data: [
+              f.tithe,
+              f.local60,
+              f.otherLocalCombined,
+              f.campo20,
+              f.mundial20 + f.specialConf
+            ],
+            backgroundColor: [
+              '#0f2942',
+              '#0d9488',
+              '#14b8a6',
+              '#f59e0b',
+              '#6366f1'
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          }
+        }
+      });
+
+      // 2. Local Church Cashflow Bar Chart
+      const ctxFlow = document.getElementById('chartCashflow').getContext('2d');
+      if (chartFlow) chartFlow.destroy();
+      chartFlow = new Chart(ctxFlow, {
+        type: 'bar',
+        data: {
+          labels: ['Saldo Inicial', 'Ingresos Locales (+)', 'Gastos Locales (-)', 'Saldo Final (=)'],
+          datasets: [{
+            label: `Monto (${currencySymbol})`,
+            data: [f.opening, f.totalLocalIncome, f.totalExpenses, f.closingBalance],
+            backgroundColor: ['#64748b', '#0d9488', '#ef4444', '#0f2942'],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+
+      // 3. Department Budget vs Actual Horizontal Bar Chart
+      const ctxDept = document.getElementById('chartDepartments').getContext('2d');
+      if (chartDept) chartDept.destroy();
+      const deptLabels = (p.departments || []).map(d =>
+        d.name.length > 28 ? d.name.substring(0, 28) + '…' : d.name
+      );
+      chartDept = new Chart(ctxDept, {
+        type: 'bar',
+        data: {
+          labels: deptLabels,
+          datasets: [
+            {
+              label: 'Presupuesto Votado',
+              data: (p.departments || []).map(d => d.budget || 0),
+              backgroundColor: '#cbd5e1',
+              borderRadius: 6
+            },
+            {
+              label: 'Gasto Real Ejecutado',
+              data: (p.departments || []).map(d => d.spent || 0),
+              backgroundColor: '#0f2942',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top' }
+          },
+          scales: {
+            x: { beginAtZero: true }
+          }
+        }
+      });
+
+      // 4. Stewardship Fidelity Chart
+      const ctxStew = document.getElementById('chartStewardship').getContext('2d');
+      if (chartStew) chartStew.destroy();
+      chartStew = new Chart(ctxStew, {
+        type: 'bar',
+        data: {
+          labels: ['Miembros en Lista', 'Diezmantes Activos', 'Ofrendantes / Pactantes'],
+          datasets: [{
+            label: 'Hermanos',
+            data: [p.totalMembers || 0, p.tithingMembers || 0, p.offeringMembers || 0],
+            backgroundColor: ['#163e64', '#d97706', '#0d9488'],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function switchView(viewName) {
+      ['form', 'dashboard', 'report'].forEach(v => {
+        document.getElementById(`view-${v}`).classList.toggle('active', v === viewName);
+        document.getElementById(`tab-btn-${v}`).classList.toggle('active', v === viewName);
+        document.getElementById(`mob-nav-${v}`).classList.toggle('active', v === viewName);
+      });
+      if (viewName === 'dashboard') {
+        const p = getCurrentPeriod();
+        updateCharts(p, computeFinancials(p));
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateCurrency(val) {
+      currencySymbol = val;
+      localStorage.setItem(CURRENCY_KEY, val);
+      updateCurrencyPrefixes();
+      calculateAndRenderAll();
+    }
+
+    function updateCurrencyPrefixes() {
+      document.querySelectorAll('.currency-prefix').forEach(el => {
+        el.textContent = currencySymbol;
+      });
+    }
+
+    function buildPlainTextReport() {
+      const p = getCurrentPeriod();
+      const f = computeFinancials(p);
+      return [
+        `⛪ *INFORME DE TESORERÍA - ${(p.churchName || 'IASD').toUpperCase()}*`,
+        `📅 *Período:* ${p.periodName || ''}`,
+        `─────────────────────`,
+        `🙏 *1. REMESAS A LA ASOCIACIÓN / MISIÓN:*`,
+        `• Diezmos (100%): ${fmt(f.tithe)}`,
+        `• 20% Campo Local: ${fmt(f.campo20)}`,
+        `• 20% Misión Mundial: ${fmt(f.mundial20)}`,
+        `• Proyectos Especiales: ${fmt(f.specialConf)}`,
+        `➡️ *Total Remesado:* ${fmt(f.totalRemittance)}`,
+        ``,
+        `🏦 *2. FONDOS DE LA IGLESIA LOCAL:*`,
+        `• Saldo Inicial: ${fmt(f.opening)}`,
+        `• (+) 60% Ofrenda Combinada: ${fmt(f.local60)}`,
+        `• (+) Fondos Locales (Pro-Templo/ASA/Otros): ${fmt(f.otherLocalCombined)}`,
+        `• (-) Total Gastos Locales: -${fmt(f.totalExpenses)}`,
+        `✅ *SALDO FINAL DISPONIBLE: ${fmt(f.closingBalance)}*`,
+        `   (Caja: ${fmt(f.cashHand)} | Banco: ${fmt(f.cashBank)} | Asoc: ${fmt(f.cashConf)})`,
+        ``,
+        `🙌 *3. FIDELIDAD:* ${f.tithePct}% Diezmantes | ${f.offeringPct}% Ofrendantes`,
+        `📝 *Nota:* ${p.reportNotes || 'Fondos conciliados en ACMS.'}`
+      ].join('\n');
+    }
+
+    function shareViaWhatsApp() {
+      const text = buildPlainTextReport();
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    function copyReportSummary() {
+      const text = buildPlainTextReport();
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('📋 Informe copiado al portapapeles');
+      });
+    }
+
+    function exportBackupJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(periods, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute('href', dataStr);
+      a.setAttribute('download', `respaldo-tesoreria-iasd-${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('💾 Respaldo descargado');
+    }
+
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(periods));
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

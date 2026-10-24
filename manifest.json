@@ -1,0 +1,18 @@
+{
+  "name": "Tesorería IASD - Informes y Análisis",
+  "short_name": "Tesorería IASD",
+  "description": "Sistema móvil de análisis financiero e informes de tesorería para la Iglesia Adventista del Séptimo Día",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f2942",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
