@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tesoreria-iasd-v1';
+const CACHE_NAME = 'tesoreria-iasd-v2';
 const ASSETS = [
   './',
   './index.html',

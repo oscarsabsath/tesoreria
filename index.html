@@ -1090,6 +1090,19 @@
          ========================================== -->
     <section id="view-dashboard" class="view-section">
 
+      <!-- Widescreen Export Action Bar -->
+      <div class="action-bar" style="margin-bottom: 16px;">
+        <button class="btn-action btn-gold" onclick="exportFullWidescreenDashboard()">
+          🖼️ Descargar Lámina Panorámica 16:9 (Todos los Gráficos HD)
+        </button>
+        <button class="btn-action btn-primary" onclick="exportSingleChartWide('distribution', 'Destino General de Dádivas Recibidas')">
+          🍩 Exportar Dona (16:9)
+        </button>
+        <button class="btn-action btn-primary" onclick="exportSingleChartWide('departments', 'Ejecución de Presupuesto por Departamento')">
+          📈 Exportar Departamentos (16:9)
+        </button>
+      </div>
+
       <!-- KPI Summary Cards -->
       <div class="kpi-grid">
         <div class="kpi-card">
@@ -1130,7 +1143,9 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">🍩 Destino General de Dádivas Recibidas</div>
-            <span class="card-badge gold">Transparencia Total</span>
+            <button class="header-btn" style="background:#0f2942; color:#fff; font-size:0.74rem; padding:5px 10px;" onclick="exportSingleChartWide('distribution', 'Destino General de Dádivas Recibidas')">
+              🖼️ Exportar 16:9
+            </button>
           </div>
           <div class="chart-box">
             <canvas id="chartDistribution"></canvas>
@@ -1140,7 +1155,9 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">📊 Flujo Financiero de la Iglesia Local</div>
-            <span class="card-badge teal">Fondos Locales</span>
+            <button class="header-btn" style="background:#0f2942; color:#fff; font-size:0.74rem; padding:5px 10px;" onclick="exportSingleChartWide('cashflow', 'Flujo Financiero de la Iglesia Local')">
+              🖼️ Exportar 16:9
+            </button>
           </div>
           <div class="chart-box">
             <canvas id="chartCashflow"></canvas>
@@ -1150,7 +1167,9 @@
         <div class="card" style="grid-column: 1 / -1;">
           <div class="card-header">
             <div class="card-title">📈 Ejecución por Departamento (Presupuesto Votado vs. Gasto Real)</div>
-            <span class="card-badge">Control de Presupuesto</span>
+            <button class="header-btn" style="background:#0f2942; color:#fff; font-size:0.74rem; padding:5px 10px;" onclick="exportSingleChartWide('departments', 'Ejecución por Departamento (Presupuesto vs. Gasto Real)')">
+              🖼️ Exportar 16:9
+            </button>
           </div>
           <div class="chart-box" style="height: 330px;">
             <canvas id="chartDepartments"></canvas>
@@ -1160,7 +1179,9 @@
         <div class="card">
           <div class="card-header">
             <div class="card-title">🙌 Indicadores de Fidelidad y Mayordomía</div>
-            <span class="card-badge">% Participación</span>
+            <button class="header-btn" style="background:#0f2942; color:#fff; font-size:0.74rem; padding:5px 10px;" onclick="exportSingleChartWide('stewardship', 'Indicadores de Fidelidad y Mayordomía')">
+              🖼️ Exportar 16:9
+            </button>
           </div>
           <div class="chart-box">
             <canvas id="chartStewardship"></canvas>
@@ -1200,13 +1221,16 @@
          ========================================== -->
     <section id="view-report" class="view-section">
       <div class="action-bar">
+        <button class="btn-action btn-gold" onclick="exportFullWidescreenDashboard()">
+          🖼️ Imagen Panorámica 16:9 (Gráficos HD)
+        </button>
         <button class="btn-action btn-primary" onclick="window.print()">
           🖨️ Imprimir / Guardar en PDF
         </button>
         <button class="btn-action btn-whatsapp" onclick="shareViaWhatsApp()">
           📲 Compartir Resumen por WhatsApp
         </button>
-        <button class="btn-action btn-gold" onclick="copyReportSummary()">
+        <button class="btn-action btn-primary" onclick="copyReportSummary()">
           📋 Copiar Informe para Junta
         </button>
       </div>
@@ -1974,6 +1998,7 @@
           }]
         },
         options: {
+          devicePixelRatio: 2,
           responsive: true,
           maintainAspectRatio: false,
           cutout: '62%',
@@ -1998,6 +2023,7 @@
           }]
         },
         options: {
+          devicePixelRatio: 2,
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -2033,6 +2059,7 @@
           ]
         },
         options: {
+          devicePixelRatio: 2,
           indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
@@ -2060,6 +2087,7 @@
           }]
         },
         options: {
+          devicePixelRatio: 2,
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -2145,6 +2173,342 @@
       a.click();
       a.remove();
       showToast('💾 Respaldo descargado');
+    }
+
+    // =========================================================
+    // WIDESCREEN 16:9 (1920x1080) IMAGE EXPORTERS FOR PROJECTOR
+    // =========================================================
+
+    function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      if (fill) {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    function drawSlideHeaderAndFooter(ctx, W, H, p, subtitleText) {
+      // Background
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillRect(0, 0, W, H);
+
+      // Top Navy Banner
+      const grad = ctx.createLinearGradient(0, 0, W, 130);
+      grad.addColorStop(0, '#0a1929');
+      grad.addColorStop(0.6, '#0f2942');
+      grad.addColorStop(1, '#163e64');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, 128);
+
+      // Gold Accent Line
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(0, 124, W, 5);
+
+      // Church Title & Subtitle
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 36px "Plus Jakarta Sans", "Inter", sans-serif';
+      ctx.fillText(p.churchName || 'Iglesia Adventista del Séptimo Día', 54, 58);
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = '700 22px "Inter", sans-serif';
+      ctx.fillText(`${subtitleText}  •  ${p.periodName || 'Período Actual'}`, 54, 98);
+
+      // Right badge in header
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '600 20px "Inter", sans-serif';
+      ctx.fillText(p.conferenceName || 'Asociación / Misión IASD', W - 54, 56);
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = '700 18px "Inter", sans-serif';
+      ctx.fillText(`Sistema Oficial ACMS (Plan 60/20/20) • Sobres: ${p.envelopesCount || 0}`, W - 54, 94);
+      ctx.textAlign = 'left';
+
+      // Footer
+      ctx.fillStyle = '#0f2942';
+      ctx.fillRect(0, H - 52, W, 52);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '600 17px "Inter", sans-serif';
+      ctx.fillText(
+        `Tesorero(a): ${p.treasurerName || 'Tesorería Local'}   |   Pastor / Director de Junta: ${p.pastorName || 'Pastor Distrital'}`,
+        54,
+        H - 20
+      );
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillText(`Emitido: ${new Date().toLocaleDateString('es-ES')}`, W - 54, H - 20);
+      ctx.textAlign = 'left';
+    }
+
+    function exportSingleChartWide(chartType, titleText) {
+      const p = getCurrentPeriod();
+      const f = computeFinancials(p);
+
+      // Ensure charts are up to date
+      updateCharts(p, f);
+
+      setTimeout(() => {
+        const W = 1920;
+        const H = 1080;
+        const canvas = document.createElement('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        const ctx = canvas.getContext('2d');
+
+        drawSlideHeaderAndFooter(ctx, W, H, p, titleText);
+
+        // Left Card: High-Res Chart Area
+        drawRoundedRect(ctx, 54, 158, 1140, 838, 24, '#ffffff', '#cbd5e1');
+
+        // Right Card: Detailed Data & Summary Table
+        drawRoundedRect(ctx, 1224, 158, 642, 838, 24, '#ffffff', '#cbd5e1');
+
+        // Render source chart into the left card preserving aspect ratio
+        let srcCanvas = null;
+        if (chartType === 'distribution') srcCanvas = document.getElementById('chartDistribution');
+        if (chartType === 'cashflow') srcCanvas = document.getElementById('chartCashflow');
+        if (chartType === 'departments') srcCanvas = document.getElementById('chartDepartments');
+        if (chartType === 'stewardship') srcCanvas = document.getElementById('chartStewardship');
+
+        ctx.fillStyle = '#0f2942';
+        ctx.font = '800 28px "Plus Jakarta Sans", "Inter", sans-serif';
+        ctx.fillText(titleText, 92, 215);
+
+        if (srcCanvas) {
+          const padX = 92;
+          const padY = 245;
+          const maxW = 1064;
+          const maxH = 715;
+          const ratio = Math.min(maxW / srcCanvas.width, maxH / srcCanvas.height);
+          const drawW = srcCanvas.width * ratio;
+          const drawH = srcCanvas.height * ratio;
+          const offsetX = padX + (maxW - drawW) / 2;
+          const offsetY = padY + (maxH - drawH) / 2;
+          ctx.drawImage(srcCanvas, offsetX, offsetY, drawW, drawH);
+        }
+
+        // Populate Right Panel with clear numbers for the congregation
+        ctx.fillStyle = '#0f2942';
+        ctx.font = '800 26px "Plus Jakarta Sans", "Inter", sans-serif';
+        ctx.fillText('📋 Resumen de Cifras Clave', 1264, 215);
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.fillRect(1264, 232, 562, 2);
+
+        let rows = [];
+        if (chartType === 'distribution') {
+          const totalRec = f.tithe + f.combined + f.specialConf + f.otherLocalCombined;
+          rows = [
+            ['Diezmos (100% Asociación)', fmt(f.tithe), '#0f2942'],
+            ['60% Ofrenda Comb. (Iglesia Local)', fmt(f.local60), '#0d9488'],
+            ['Fondos Locales (Templo / ASA)', fmt(f.otherLocalCombined), '#14b8a6'],
+            ['20% Campo Local (Asociación)', fmt(f.campo20), '#f59e0b'],
+            ['20% Misión Mundial + Proyectos', fmt(f.mundial20 + f.specialConf), '#6366f1'],
+            ['TOTAL GENERAL RECIBIDO', fmt(totalRec), '#0f2942'],
+            ['Total Enviado a Asociación', fmt(f.totalRemittance), '#d97706'],
+            ['Total Queda en Iglesia Local', fmt(f.totalLocalIncome), '#0d9488']
+          ];
+        } else if (chartType === 'cashflow') {
+          rows = [
+            ['Saldo Inicial del Período', fmt(f.opening), '#64748b'],
+            ['(+) 60% Ofrenda Combinada', fmt(f.local60), '#0d9488'],
+            ['(+) Otros Fondos Locales', fmt(f.otherLocalCombined), '#0d9488'],
+            ['(=) Total Ingresos Locales', fmt(f.totalLocalIncome), '#0f766e'],
+            ['(-) Total Gastos Ejecutados', `-${fmt(f.totalExpenses)}`, '#ef4444'],
+            ['Balance Neto del Período', `${f.netPeriodResult >= 0 ? '+' : ''}${fmt(f.netPeriodResult)}`, f.netPeriodResult >= 0 ? '#15803d' : '#b91c1c'],
+            ['SALDO FINAL DISPONIBLE', fmt(f.closingBalance), '#0f2942'],
+            ['En Caja + Banco + Asociación', fmt(f.totalBacked), '#163e64']
+          ];
+        } else if (chartType === 'departments') {
+          rows = (p.departments || []).slice(0, 9).map(d => [
+            d.name.length > 26 ? d.name.substring(0, 26) + '…' : d.name,
+            `${fmt(d.spent)} / ${fmt(d.budget)}`,
+            (Number(d.spent) > Number(d.budget) && Number(d.budget) > 0) ? '#ef4444' : '#0f2942'
+          ]);
+          rows.push(['TOTAL PRESUPUESTO VOTADO', fmt(f.totalBudget), '#64748b']);
+          rows.push(['TOTAL GASTO EJECUTADO', fmt(f.totalExpenses), '#0f2942']);
+        } else {
+          rows = [
+            ['Miembros Bautizados en Lista', `${p.totalMembers || 0} hnos.`, '#163e64'],
+            ['Diezmantes Activos', `${p.tithingMembers || 0} (${f.tithePct}%)`, '#d97706'],
+            ['Ofrendantes / Pactantes', `${p.offeringMembers || 0} (${f.offeringPct}%)`, '#0d9488'],
+            ['Sobres Procesados en ACMS', `${p.envelopesCount || 0} sobres`, '#0f2942'],
+            ['Saldo Disponible Iglesia Local', fmt(f.closingBalance), '#0f766e'],
+            ['Total Remesado a Asociación', fmt(f.totalRemittance), '#d97706']
+          ];
+        }
+
+        let yPos = 280;
+        rows.forEach(([label, val, color], idx) => {
+          const isHighlight = idx >= rows.length - 2;
+          if (isHighlight) {
+            drawRoundedRect(ctx, 1264, yPos - 30, 562, 54, 10, '#f8fafc', '#cbd5e1');
+          }
+          ctx.fillStyle = '#334155';
+          ctx.font = isHighlight ? '800 20px "Inter", sans-serif' : '600 19px "Inter", sans-serif';
+          ctx.fillText(label, 1280, yPos + 4);
+
+          ctx.textAlign = 'right';
+          ctx.fillStyle = color;
+          ctx.font = '800 21px "Plus Jakarta Sans", "Inter", sans-serif';
+          ctx.fillText(val, 1810, yPos + 4);
+          ctx.textAlign = 'left';
+
+          yPos += 64;
+        });
+
+        downloadCanvasAsPNG(canvas, `grafico-16x9-${chartType}-${(p.periodName || 'iasd').replace(/\s+/g, '-')}.png`);
+      }, 150);
+    }
+
+    function exportFullWidescreenDashboard() {
+      const p = getCurrentPeriod();
+      const f = computeFinancials(p);
+
+      // Ensure charts are rendered
+      updateCharts(p, f);
+
+      setTimeout(() => {
+        const W = 1920;
+        const H = 1080;
+        const canvas = document.createElement('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        const ctx = canvas.getContext('2d');
+
+        drawSlideHeaderAndFooter(ctx, W, H, p, 'INFORME DE TESORERÍA A LA FELIGRESÍA (PANORÁMICO 16:9)');
+
+        // Row 1: 5 KPI Cards across the top (y = 148, height = 132)
+        const kpis = [
+          { label: 'SALDO INICIAL LOCAL', val: fmt(f.opening), sub: 'Al inicio del período', color: '#0f2942' },
+          { label: 'INGRESOS LOCALES (+)', val: fmt(f.totalLocalIncome), sub: `60% Comb: ${fmt(f.local60)}`, color: '#0d9488' },
+          { label: 'GASTOS LOCALES (-)', val: fmt(f.totalExpenses), sub: `Presupuesto: ${fmt(f.totalBudget)}`, color: '#ef4444' },
+          { label: 'SALDO ACTUAL DISPONIBLE', val: fmt(f.closingBalance), sub: `Caja/Banco: ${fmt(f.totalBacked)}`, color: '#10b981' },
+          { label: 'REMESA A ASOCIACIÓN', val: fmt(f.totalRemittance), sub: `Diezmos: ${fmt(f.tithe)}`, color: '#d97706' }
+        ];
+
+        const cardW = 350;
+        const gap = 15;
+        kpis.forEach((k, i) => {
+          const x = 54 + i * (cardW + gap);
+          const y = 148;
+          drawRoundedRect(ctx, x, y, cardW, 132, 16, '#ffffff', '#cbd5e1');
+          ctx.fillStyle = k.color;
+          ctx.fillRect(x + 16, y, cardW - 32, 6);
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '700 15px "Inter", sans-serif';
+          ctx.fillText(k.label, x + 22, y + 36);
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = '800 31px "Plus Jakarta Sans", "Inter", sans-serif';
+          ctx.fillText(k.val, x + 22, y + 80);
+
+          ctx.fillStyle = '#475569';
+          ctx.font = '600 15px "Inter", sans-serif';
+          ctx.fillText(k.sub, x + 22, y + 110);
+        });
+
+        // Row 2: 3 Widescreen Panels (y = 298, height = 706)
+        // Panel 1: Distribution Doughnut + Cashflow (x = 54, w = 560)
+        drawRoundedRect(ctx, 54, 298, 560, 344, 18, '#ffffff', '#cbd5e1');
+        ctx.fillStyle = '#0f2942';
+        ctx.font = '800 20px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText('🍩 Destino de Dádivas Recibidas', 78, 334);
+        const cDist = document.getElementById('chartDistribution');
+        if (cDist) ctx.drawImage(cDist, 84, 346, 500, 280);
+
+        drawRoundedRect(ctx, 54, 658, 560, 346, 18, '#ffffff', '#cbd5e1');
+        ctx.fillStyle = '#0f2942';
+        ctx.font = '800 20px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText('📊 Flujo Financiero Iglesia Local', 78, 694);
+        const cFlow = document.getElementById('chartCashflow');
+        if (cFlow) ctx.drawImage(cFlow, 84, 706, 500, 280);
+
+        // Panel 2: Department Execution Chart (x = 632, w = 710)
+        drawRoundedRect(ctx, 632, 298, 710, 706, 18, '#ffffff', '#cbd5e1');
+        ctx.fillStyle = '#0f2942';
+        ctx.font = '800 22px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText('📈 Presupuesto Votado vs. Gasto Real por Departamento', 660, 338);
+        const cDept = document.getElementById('chartDepartments');
+        if (cDept) ctx.drawImage(cDept, 656, 360, 662, 615);
+
+        // Panel 3: Executive Table & Stewardship (x = 1360, w = 506)
+        drawRoundedRect(ctx, 1360, 298, 506, 706, 18, '#ffffff', '#cbd5e1');
+        ctx.fillStyle = '#0f2942';
+        ctx.font = '800 21px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText('🏦 Arqueo y Resumen de Fondos', 1388, 338);
+
+        const summaryLines = [
+          ['Diezmos (100% Asociación)', fmt(f.tithe)],
+          ['20% Campo Local + 20% Mundial', fmt(f.campo20 + f.mundial20)],
+          ['Ofrendas Proyectos Especiales', fmt(f.specialConf)],
+          ['60% Ofrenda Comb. (Iglesia Local)', fmt(f.local60)],
+          ['Fondo Pro-Templo / Construcción', fmt(f.building)],
+          ['Acción Solidaria (ASA / Dorcas)', fmt(f.welfare)],
+          ['Otros Ingresos Locales', fmt(f.directLocal + f.otherLocal)],
+          ['Efectivo en Caja Local', fmt(f.cashHand)],
+          ['Saldo en Cuenta Bancaria', fmt(f.cashBank)],
+          ['Fondos en Asociación', fmt(f.cashConf)],
+          ['Fidelidad Diezmos / Ofrendas', `${f.tithePct}% / ${f.offeringPct}%`]
+        ];
+
+        let sy = 382;
+        summaryLines.forEach(([lbl, val], idx) => {
+          if (idx % 2 === 0) {
+            drawRoundedRect(ctx, 1382, sy - 22, 462, 34, 6, '#f8fafc', null);
+          }
+          ctx.fillStyle = '#334155';
+          ctx.font = '600 16px "Inter", sans-serif';
+          ctx.fillText(lbl, 1394, sy);
+
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#0f2942';
+          ctx.font = '800 16px "Inter", sans-serif';
+          ctx.fillText(val, 1832, sy);
+          ctx.textAlign = 'left';
+          sy += 38;
+        });
+
+        // Final Highlight Box inside Panel 3
+        drawRoundedRect(ctx, 1382, 818, 462, 160, 14, '#0f2942', null);
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '800 17px "Inter", sans-serif';
+        ctx.fillText('SALDO FINAL DISPONIBLE IGLESIA LOCAL', 1404, 854);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 38px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(fmt(f.closingBalance), 1404, 904);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '600 15px "Inter", sans-serif';
+        ctx.fillText(`Conciliado en Caja, Banco y ACMS`, 1404, 944);
+
+        downloadCanvasAsPNG(canvas, `informe-panoramico-16x9-${(p.periodName || 'iasd').replace(/\s+/g, '-')}.png`);
+      }, 150);
+    }
+
+    function downloadCanvasAsPNG(canvas, filename) {
+      const dataUrl = canvas.toDataURL('image/png', 1.0);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('🖼️ Imagen panorámica 16:9 (1920x1080) descargada');
     }
 
     function saveToStorage() {
